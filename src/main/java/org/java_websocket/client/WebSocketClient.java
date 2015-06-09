@@ -58,9 +58,24 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 
 	private int connectTimeout = 0;
 
+	private String username;
+	private int userID;
+
 	/** This open a websocket connection as specified by rfc6455 */
 	public WebSocketClient( URI serverURI ) {
 		this( serverURI, new Draft_17() );
+	}
+	
+	/** This open a websocket connection as specified by rfc6455 */
+	public WebSocketClient( URI serverURI, String username ) {
+		this( serverURI, new Draft_17() );
+		this.username = username;
+	}
+
+	/** This open a websocket connection as specified by rfc6455 */
+	public WebSocketClient( URI serverURI, int userID) {
+		this( serverURI, new Draft_17() );
+		this.userID = userID;
 	}
 
 	/**
@@ -225,6 +240,8 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 		HandshakeImpl1Client handshake = new HandshakeImpl1Client();
 		handshake.setResourceDescriptor( path );
 		handshake.put( "Host", host );
+		handshake.put( "Username", this.username );
+		handshake.put( "UserID", this.username );
 		if( headers != null ) {
 			for( Map.Entry<String,String> kv : headers.entrySet() ) {
 				handshake.put( kv.getKey(), kv.getValue() );
